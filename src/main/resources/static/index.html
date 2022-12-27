@@ -36,7 +36,7 @@
             <td>Delete</td>
         </tr>
         <tbody>
-        <tr ng-repeat="s in ProductsList">
+        <tr ng-repeat="s in ProductsList | startFrom:currentPage*pageSize | limitTo:pageSize">
             <td>{{s.id}}</td>
             <td>{{s.name}}</td>
             <td>{{s.price}}</td>
@@ -46,6 +46,13 @@
         </tr>
         </tbody>
     </table>
+
+    <ul>
+        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">Previous</button>
+        {{currentPage+1}}/{{numberOfPages()}}
+        <button ng-disabled="currentPage >= ProductsList.length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
+    </ul>
+
     <br>
     <h3>Add Product</h3>
     <table class="table table-hover" cellpadding="0" cellspacing="0">
@@ -65,6 +72,17 @@
         </tr>
         </tbody>
     </table>
+    <br>
+    <h3>Add Product (some other way)</h3>
+    <form novalidate ng-submit="addProductVar()">
+        <input class="form-control" type="text" ng-model="newProduct.name">
+        <p></p>
+        <input class="form-control" type="number" ng-model="newProduct.price">
+        <p></p>
+        <button type="submit" class="btn btn-primary">Confirm</button>
+    </form>
+
 </div>
+
 </body>
 </html>

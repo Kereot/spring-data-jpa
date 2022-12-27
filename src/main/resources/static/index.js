@@ -1,10 +1,16 @@
 angular.module('app', []).controller('productController', function ($scope, $http) {
     const contextPath = 'http://localhost:8080';
 
+    $scope.currentPage = 0;
+    $scope.pageSize = 10;
+
     $scope.loadProducts = function () {
         $http.get(contextPath + '/products')
             .then(function (response) {
                 $scope.ProductsList = response.data;
+                $scope.numberOfPages=function(){
+                    return Math.ceil($scope.ProductsList.length/$scope.pageSize);
+                }
             });
     };
 
@@ -60,5 +66,20 @@ angular.module('app', []).controller('productController', function ($scope, $htt
         });
     };
 
+    $scope.addProductVar = function() {
+        $http.post(contextPath + '/products/add', $scope.newProduct)
+            .then(function (response) {
+                $scope.loadProducts();
+                $scope.newProduct = null;
+            });
+    };
+
     $scope.loadProducts();
-});
+
+}).filter('startFrom', function() {
+     return function(input, start) {
+         start = +start; //parse to int
+         return input.slice(start);
+     }
+ });
+
