@@ -2,7 +2,11 @@ package com.gb.services;
 
 import com.gb.entities.Product;
 import com.gb.repositories.ProductRepository;
+import com.gb.repositories.specifications.ProductSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +17,20 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    public Page<Product> find(Float minPrice, Float maxPrice, String name, Integer page) {
+        Specification<Product> spec = Specification.where(null);
+        if (minPrice != null) {
+            spec = spec.and(ProductSpecifications.priceGreaterOrEqualThan(minPrice));
+        }
+        if (maxPrice != null) {
+            spec = spec.and(ProductSpecifications.priceLessOrEqualThan(maxPrice));
+        }
+        if (name != null) {
+            spec = spec.and(ProductSpecifications.nameLike(name));
+        }
+        return productRepository.findAll(spec, PageRequest.of(page - 1, 10));
+    }
 
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
