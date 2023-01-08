@@ -1,87 +1,81 @@
 <!doctype html>
 <html ng-app="app">
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
-    <script src="index.js"></script>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+  <script src="index.js"></script>
 </head>
 <body>
-<div class="container" ng-controller="productController">
-    <h3>Add New Random Beer</h3>
-    <button class="btn btn-primary"
-            ng-click="saveRandom()">Do It!</button>
-    <h3>Products List</h3>
-    <h3>Filter By Price</h3>
-    <input type="number" name="min" ng-model="min" />
-    <button class="btn btn-primary"
-            ng-click="findAllByPriceGreaterThan(min)">Search Higher</button>
-    <br>
-    <input type="number" name="max" ng-model="max" />
-    <button class="btn btn-primary"
-            ng-click="findAllByPriceLessThan(max)">Search Lower</button>
-    <br>
-    <input type="number" name="min" ng-model="min" />
-    <input type="number" name="max" ng-model="max" />
-    <button class="btn btn-primary"
-            ng-click="findAllByPriceBetween(min, max)">Search In Between</button>
-    <h3>Products List</h3>
-    <table class="table table-hover" cellpadding="0" cellspacing="0">
-        <tr>
-            <td>ID</td>
-            <td>Name</td>
-            <td>Price</td>
-            <td>Delete</td>
-        </tr>
-        <tbody>
-        <tr ng-repeat="s in ProductsList | startFrom:currentPage*pageSize | limitTo:pageSize">
-            <td>{{s.id}}</td>
-            <td>{{s.name}}</td>
-            <td>{{s.price}}</td>
-            <td>
-                <button class="btn btn-danger" ng-click="deleteProduct(s.id)">Remove</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container" ng-controller="restProductController">
+  <h3>Filter Products</h3>
+  <form novalidate ng-submit="loadProducts()">
+    <div class = "form-floating input-group-sm">
+      <input class="form-control" id="filterMinPrice" type="number" ng-model="filter.min_price">
+      <label for = "filterMinPrice">Min. Price</label>
+    </div>
+    <p></p>
+    <div class = "form-floating input-group-sm">
+      <input class="form-control" id="filterMaxPrice" type="number" ng-model="filter.max_price">
+      <label for = "filterMaxPrice">Max. Price</label>
+    </div>
+    <p></p>
+    <div class = "form-floating input-group-sm">
+      <input class="form-control" id="filterName" type="text" ng-model="filter.name">
+      <label for = "filterName">Product Name</label>
+    </div>
+    <p></p>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button class="btn btn-danger" ng-click="resetFilter()">Reset</button>
+  </form>
 
-    <ul>
-        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">Previous</button>
-        {{currentPage+1}}/{{numberOfPages()}}
-        <button ng-disabled="currentPage >= ProductsList.length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
-    </ul>
-
-    <br>
-    <h3>Add Product</h3>
-    <table class="table table-hover" cellpadding="0" cellspacing="0">
-        <tr>
-            <td>Name</td>
-            <td>Price</td>
-            <td>Confirm</td>
-        </tr>
-        <tbody>
-        <tr>
-            <td><input type="text" name="name" ng-model="name" /></td>
-            <td><input type="number" name="cost" ng-model="price" /></td>
-            <td>
-                <button class="btn btn-primary"
-                        ng-click="addProduct(name, price)">Confirm</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <br>
-    <h3>Add Product (some other way)</h3>
-    <form novalidate ng-submit="addProductVar()">
-        <input class="form-control" type="text" ng-model="newProduct.name">
-        <p></p>
-        <input class="form-control" type="number" ng-model="newProduct.price">
-        <p></p>
-        <button type="submit" class="btn btn-primary">Confirm</button>
-    </form>
-
+  <h3>Products List</h3>
+  <table class="table table-hover" cellpadding="0" cellspacing="0">
+    <tr>
+      <td>ID</td>
+      <td>Name</td>
+      <td>Price</td>
+      <td>Delete</td>
+      <td>New Price</td>
+      <td>Change Price</td>
+    </tr>
+    <tbody>
+    <tr ng-repeat="p in ProductsList">
+      <td>{{p.id}}</td>
+      <td>{{p.name}}</td>
+      <td>{{p.price}}</td>
+      <td>
+        <button class="btn btn-danger" ng-click="deleteProduct(p.id)">Remove</button>
+      </td>
+      <td>
+        <input type="number" name="cost" ng-model="price" />
+      </td>
+      <td>
+        <button class="btn btn-primary" ng-click="changePrice(p.id, p.name, price)">Confirm</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <ul>
+    <button ng-disabled="currentPage == 1" ng-click="changePage(currentPage-1)">Previous</button>
+    {{currentPage}}
+    <button ng-disabled="ProductsList.length < 10" ng-click="changePage(currentPage+1)">Next</button>
+  </ul>
+  <br>
+  <h3>Add New Random Beer</h3>
+  <button class="btn btn-primary"
+          ng-click="saveRandom()">Do It!</button>
+  <br>
+  <h3>Add Product</h3>
+  <form novalidate ng-submit="addProduct()">
+    <input class="form-control" type="text" ng-model="newProduct.name">
+    <p></p>
+    <input class="form-control" type="number" ng-model="newProduct.price">
+    <p></p>
+    <button type="submit" class="btn btn-primary">Confirm</button>
+  </form>
 </div>
 
 </body>

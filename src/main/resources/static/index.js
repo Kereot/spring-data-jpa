@@ -1,45 +1,62 @@
-angular.module('app', []).controller('productController', function ($scope, $http) {
-    const contextPath = 'http://localhost:8080';
+angular.module('app', []).controller('restProductController', function ($scope, $http) {
+    const contextPath = 'http://localhost:8080/api/v1';
 
-    $scope.currentPage = 0;
+    $scope.currentPage = 1;
     $scope.pageSize = 10;
 
-    $scope.loadProducts = function () {
-        $http.get(contextPath + '/products')
+    $scope.loadProducts = function (pageIndex = 1) {
+        $http({
+            url: contextPath + '/products',
+            method: 'GET',
+            params: {
+                page: $scope.currentPage,
+                name: $scope.filter ? $scope.filter.name : null,
+                min_price: $scope.filter ? $scope.filter.min_price : null,
+                max_price: $scope.filter ? $scope.filter.max_price : null
+            }
+        }).then(function (response) {
+            $scope.ProductsList = response.data.content;
+        });
+    }
+
+    $scope.resetFilter = function () {
+        $scope.filter.min_price = null;
+        $scope.filter.max_price = null;
+        $scope.filter.name = null;
+        $scope.loadProducts();
+    }
+
+    $scope.changePage = function (page) {
+        $scope.currentPage = page;
+        $scope.loadProducts();
+    }
+
+    $scope.deleteProduct = function (id) {
+        $http.delete(contextPath + '/products/'+ id)
             .then(function (response) {
-                $scope.ProductsList = response.data;
-                $scope.numberOfPages=function(){
-                    return Math.ceil($scope.ProductsList.length/$scope.pageSize);
-                }
+                $scope.loadProducts();
+            });
+    }
+
+    $scope.addProduct = function() {
+        $http.post(contextPath + '/products', $scope.newProduct)
+            .then(function (response) {
+                $scope.loadProducts();
+                $scope.newProduct = null;
             });
     };
 
-    $scope.findAllByPriceGreaterThan = function (price) {
-        $http.get(contextPath + '/products/min/'+ price)
+    $scope.changePrice = function(id, name, price) {
+        $http.put(contextPath + '/products', {
+            id: id,
+            name: name,
+            price: price
+        })
             .then(function (response) {
-                $scope.ProductsList = response.data;
+                $scope.loadProducts();
+                $scope.newProduct = null;
             });
-    }
-
-    $scope.findAllByPriceLessThan = function (price) {
-        $http.get(contextPath + '/products/max/'+ price)
-            .then(function (response) {
-                $scope.ProductsList = response.data;
-            });
-    }
-
-    $scope.findAllByPriceBetween = function (priceMin, priceMax) {
-        $http({
-            url: contextPath + '/products/between',
-            method: 'GET',
-            params: {
-                priceMin: priceMin,
-                priceMax: priceMax
-            }
-        }).then(function (response) {
-                $scope.ProductsList = response.data;
-            });
-    }
+    };
 
     $scope.saveRandom = function () {
         $http.get(contextPath + '/products/add_random')
@@ -48,38 +65,6 @@ angular.module('app', []).controller('productController', function ($scope, $htt
             });
     };
 
-    $scope.deleteProduct = function (id) {
-        $http.delete(contextPath + '/products/delete/'+ id)
-            .then(function (response) {
-                $scope.loadProducts();
-            });
-    }
-
-    $scope.addProduct = function (name, price) {
-        var product = {
-            'name': name,
-            'price': price
-        };
-        var url = contextPath + '/products/add';
-        $http.post(url, product).then(function (response) {
-            $scope.loadProducts();
-        });
-    };
-
-    $scope.addProductVar = function() {
-        $http.post(contextPath + '/products/add', $scope.newProduct)
-            .then(function (response) {
-                $scope.loadProducts();
-                $scope.newProduct = null;
-            });
-    };
-
     $scope.loadProducts();
 
-}).filter('startFrom', function() {
-     return function(input, start) {
-         start = +start; //parse to int
-         return input.slice(start);
-     }
- });
-
+});

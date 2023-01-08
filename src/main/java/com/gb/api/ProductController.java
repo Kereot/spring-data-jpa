@@ -1,63 +1,61 @@
 package com.gb.api;
 
+import com.gb.dto.ProductDto;
 import com.gb.entities.Product;
 import com.gb.services.ProductGenerator;
 import com.gb.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/v1/products")
 public class ProductController {
     @Autowired
     private ProductService productService;
 
     @GetMapping("/{id}")
-    public Product getById(@PathVariable Long id) {
-        return productService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public ProductDto getById(@PathVariable Long id) {
+        return productService.findById(id).map(ProductDto::new).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/name")
-    public Product getByName(@RequestParam String name) {
-        return productService.findByName(name).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("")
-    public List<Product> findAll() {
-        return productService.findAll();
+    @GetMapping()
+    public Page<ProductDto> find(
+            @RequestParam(name = "page", defaultValue = "1") Integer page,
+            @RequestParam(name = "min_price", required = false) Float minPrice,
+            @RequestParam(name = "max_price", required = false) Float maxPrice,
+            @RequestParam(name = "name", required = false) String name
+    ) {
+        if (page < 1) {
+            page = 1;
+        }
+        return productService.find(minPrice, maxPrice, name, page).map(
+                ProductDto::new
+        );
     }
 
     @GetMapping("/add_random")
-    public Product saveRandom() {
-        return productService.save(ProductGenerator.generate());
+    public ProductDto saveRandom() {
+        return new ProductDto(productService.save(ProductGenerator.generate()));
     }
 
-    @PostMapping("/add")
-    public Product addProduct(@RequestBody Product product){
-        return productService.save(product);
+    @PostMapping()
+    public ProductDto addProduct(@RequestBody Product product){
+        product.setId(null);
+        return new ProductDto(productService.save(product));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping()
+    public ProductDto updateProduct(@RequestBody Product product) {
+        return new ProductDto(productService.save(product));
+    }
+
+    @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id){
         productService.deleteProduct(id);
     }
 
-    @GetMapping("/min/{price}")
-    public List<Product> findAllByPriceGreaterThan(@PathVariable String price) {
-        return productService.findAllByPriceGreaterThan(Float.valueOf(price)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
 
-    @GetMapping("/max/{price}")
-    public List<Product> findAllByPriceLessThan(@PathVariable String price) {
-        return productService.findAllByPriceLessThan(Float.valueOf(price)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/between")
-    public List<Product> findAllByPriceBetween(@RequestParam Float priceMin, @RequestParam Float priceMax) {
-        return productService.findAllByPriceBetween(priceMin, priceMax).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
 }
