@@ -15,7 +15,7 @@ angular.module('app', []).controller('restProductController', function ($scope, 
                 max_price: $scope.filter ? $scope.filter.max_price : null
             }
         }).then(function (response) {
-            $scope.ProductsList = response.data.content;
+            $scope.ProductsPage = response.data;
         });
     }
 
@@ -44,7 +44,7 @@ angular.module('app', []).controller('restProductController', function ($scope, 
                 $scope.loadProducts();
                 $scope.newProduct = null;
             });
-    };
+    }
 
     $scope.changePrice = function(id, name, price) {
         $http.put(contextPath + '/products', {
@@ -54,17 +54,42 @@ angular.module('app', []).controller('restProductController', function ($scope, 
         })
             .then(function (response) {
                 $scope.loadProducts();
-                $scope.newProduct = null;
             });
-    };
+    }
 
     $scope.saveRandom = function () {
         $http.get(contextPath + '/products/add_random')
             .then(function (response) {
                 $scope.loadProducts();
             });
-    };
+    }
+
+    $scope.loadCart = function () {
+        $http.get(contextPath + '/products/cart')
+            .then(function (response) {
+                $scope.CartsPage = response.data;
+            });
+    }
+
+    $scope.addToCart = function(id, name, price) {
+        $http.post(contextPath + '/products/cart', {
+            id: id,
+            name: name,
+            price: price
+        })
+            .then(function (response) {
+                $scope.loadCart();
+            });
+    }
+
+    $scope.deleteProductFromCart = function (id) {
+        $http.delete(contextPath + '/products/cart/'+ id)
+            .then(function (response) {
+                $scope.loadCart();
+            });
+    }
 
     $scope.loadProducts();
+    $scope.loadCart();
 
 });

@@ -1,6 +1,8 @@
 package com.gb.services;
 
+import com.gb.dto.ProductDto;
 import com.gb.entities.Product;
+import com.gb.exceptions.ResourceNotFoundException;
 import com.gb.repositories.ProductRepository;
 import com.gb.repositories.specifications.ProductSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,14 +38,6 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public Optional<Product> findByName(String name) {
-        return productRepository.findByName(name);
-    }
-
-    public List<Product> findAll() {
-        return productRepository.findAll();
-    }
-
     public Product save(Product product) {
         return productRepository.save(product);
     }
@@ -52,15 +46,11 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Optional<List<Product>> findAllByPriceGreaterThan(Float price) {
-        return productRepository.findAllByPriceGreaterThan(price);
-    }
-
-    public Optional<List<Product>> findAllByPriceLessThan(Float price) {
-        return productRepository.findAllByPriceLessThan(price);
-    }
-
-    public Optional<List<Product>> findAllByPriceBetween(Float priceMin, Float priceMax) {
-        return productRepository.findAllByPriceBetween(priceMin, priceMax);
+    @Transactional
+    public Product update(ProductDto productDto) {
+        Product product = productRepository.findById(productDto.getId()).orElseThrow(() -> new ResourceNotFoundException("Can't update the product (not found in the DB) id: " + productDto.getId()));
+        product.setName(productDto.getName());
+        product.setPrice(productDto.getPrice());
+        return product;
     }
 }
