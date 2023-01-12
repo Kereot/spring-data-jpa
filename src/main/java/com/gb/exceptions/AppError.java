@@ -1,4 +1,4 @@
-package com.gb.dto;
+package com.gb.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDto {
-    private Long id;
-
-    private String name;
-
-    private Float price;
+public class AppError {
+    private int statusCode;
+    private String message;
 }

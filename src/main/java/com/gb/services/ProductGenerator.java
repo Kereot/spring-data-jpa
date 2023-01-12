@@ -17,8 +17,6 @@ public class ProductGenerator {
 
     @EventListener(ApplicationReadyEvent.class)
     public void generateProductsOnStartup() {
-
-
         for (int i = 0; i < 20; i++) {
             productRepository.save(generate());
         }

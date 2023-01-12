@@ -38,16 +38,20 @@
       <td>Name</td>
       <td>Price</td>
       <td>Delete</td>
+      <td>Add To Cart</td>
       <td>New Price</td>
       <td>Change Price</td>
     </tr>
     <tbody>
-    <tr ng-repeat="p in ProductsList">
+    <tr ng-repeat="p in ProductsPage.content">
       <td>{{p.id}}</td>
       <td>{{p.name}}</td>
       <td>{{p.price}}</td>
       <td>
         <button class="btn btn-danger" ng-click="deleteProduct(p.id)">Remove</button>
+      </td>
+      <td>
+        <button class="btn btn-danger" ng-click="addToCart(p.id, p.name, p.price)">Add To Cart</button>
       </td>
       <td>
         <input type="number" name="cost" ng-model="price" />
@@ -67,6 +71,29 @@
   <h3>Add New Random Beer</h3>
   <button class="btn btn-primary"
           ng-click="saveRandom()">Do It!</button>
+  <br>
+  <br>
+  <h3>Cart</h3>
+  <table class="table table-hover" cellpadding="0" cellspacing="0">
+    <tr>
+      <td>ID</td>
+      <td>Name</td>
+      <td>Price</td>
+      <td>Quantity</td>
+      <td>Remove</td>
+    </tr>
+    <tbody>
+    <tr ng-repeat="p in CartsPage.content">
+      <td>{{p.id}}</td>
+      <td>{{p.name}}</td>
+      <td>{{p.price}}</td>
+      <td>{{p.quantity}}</td>
+      <td>
+        <button class="btn btn-danger" ng-click="deleteProductFromCart(p.id)">Remove</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
   <br>
   <h3>Add Product</h3>
   <form novalidate ng-submit="addProduct()">
