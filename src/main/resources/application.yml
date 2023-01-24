@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:test
+    url: jdbc:h2:mem:mydatabase;MODE=PostgreSQL
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -9,7 +9,8 @@ spring:
       enabled: true
   jpa:
     hibernate:
-      ddl-auto: create
+      dialect: org.hibernate.dialect.H2Dialect
+      ddl-auto: update
   jackson:
     serialization:
       indent_output: true
