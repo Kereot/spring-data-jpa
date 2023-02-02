@@ -1,5 +1,6 @@
 package com.gb.api;
 
+import com.gb.aspect.Timer;
 import com.gb.converters.ProductConverter;
 import com.gb.dto.ProductDto;
 import com.gb.entities.Product;
@@ -41,6 +42,7 @@ public class ProductController {
         );
     }
 
+    @Timer
     @GetMapping("/add_random")
     public ProductDto saveRandom() {
         return productConverter.entityToDto(productService.save(ProductGenerator.generate()));
