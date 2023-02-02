@@ -31,7 +31,6 @@ public class JwtService {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + properties.getExpireTime().toMillis()))
                 .signWith(SignatureAlgorithm.HS256, properties.getSecret())
-//                .signWith(SignatureAlgorithm.HS256, "kjabfdlkbgadfjkhafnlaiusjkhan;gfa")
                 .compact();
     }
 
@@ -49,7 +48,6 @@ public class JwtService {
     private Claims parse(String bearerTokenValue) {
         return Jwts.parser()
                 .setSigningKey(properties.getSecret())
-//                .setSigningKey("kjabfdlkbgadfjkhafnlaiusjkhan;gfa")
                 .parseClaimsJws(bearerTokenValue)
                 .getBody();
     }

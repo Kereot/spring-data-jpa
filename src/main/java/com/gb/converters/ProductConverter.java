@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductConverter {
     public Product dtoToEntity(ProductDto productDto) {
-        return new Product(productDto.getId(), productDto.getName(), productDto.getPrice());
+        return new Product(productDto.getName(), productDto.getPrice());
     }
 
     public ProductDto entityToDto(Product product) {
