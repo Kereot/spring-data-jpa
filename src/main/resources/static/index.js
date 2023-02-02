@@ -74,14 +74,14 @@ angular.module('app', ['ngStorage']).controller('restProductController', functio
 
     $scope.deleteProduct = function (id) {
         $http.delete(contextPath + '/products/'+ id)
-            .then(function (response) {
+            .then(function () {
                 $scope.loadProducts();
             });
     }
 
     $scope.addProduct = function() {
         $http.post(contextPath + '/products', $scope.newProduct)
-            .then(function (response) {
+            .then(function () {
                 $scope.loadProducts();
                 $scope.newProduct = null;
             });
@@ -93,14 +93,14 @@ angular.module('app', ['ngStorage']).controller('restProductController', functio
             name: name,
             price: price
         })
-            .then(function (response) {
+            .then(function () {
                 $scope.loadProducts();
             });
     }
 
     $scope.saveRandom = function () {
         $http.get(contextPath + '/products/add_random')
-            .then(function (response) {
+            .then(function () {
                 $scope.loadProducts();
             });
     }
@@ -109,6 +109,7 @@ angular.module('app', ['ngStorage']).controller('restProductController', functio
         $http.get(contextPath + '/products/cart')
             .then(function (response) {
                 $scope.CartsPage = response.data;
+                $scope.showTotalPrice();
             });
     }
 
@@ -118,15 +119,40 @@ angular.module('app', ['ngStorage']).controller('restProductController', functio
             name: name,
             price: price
         })
-            .then(function (response) {
+            .then(function () {
+                $scope.loadCart();
+            });
+    }
+
+    $scope.increaseQuantity = function (id) {
+        $http.post(contextPath + '/products/cart/' + id, {
+            id: id
+        })
+            .then(function () {
                 $scope.loadCart();
             });
     }
 
     $scope.deleteProductFromCart = function (id) {
         $http.delete(contextPath + '/products/cart/'+ id)
-            .then(function (response) {
+            .then(function () {
                 $scope.loadCart();
+            });
+    }
+
+    $scope.clearCart = function () {
+        $http.delete(contextPath + '/products/cart')
+            .then(function () {
+                $scope.loadCart();
+            });
+    }
+
+    $scope.totalPrice = 0;
+
+    $scope.showTotalPrice = function () {
+        $http.get(contextPath + '/products/cart/total_price')
+            .then(function (response) {
+                $scope.totalPrice = response.data;
             });
     }
 
