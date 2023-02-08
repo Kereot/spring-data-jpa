@@ -5,20 +5,20 @@ import com.gb.entities.Product;
 import com.gb.exceptions.ResourceNotFoundException;
 import com.gb.repositories.ProductRepository;
 import com.gb.repositories.specifications.ProductSpecifications;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public Page<Product> find(Float minPrice, Float maxPrice, String name, Integer page) {
         Specification<Product> spec = Specification.where(null);
@@ -32,6 +32,10 @@ public class ProductService {
             spec = spec.and(ProductSpecifications.nameLike(name));
         }
         return productRepository.findAll(spec, PageRequest.of(page - 1, 10));
+    }
+
+    public List<Product> findAllForWs() {
+        return productRepository.findAll();
     }
 
     public Optional<Product> findById(Long id) {
