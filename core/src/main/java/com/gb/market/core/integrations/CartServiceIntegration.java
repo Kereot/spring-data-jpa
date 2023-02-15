@@ -3,23 +3,55 @@ package com.gb.market.core.integrations;
 import com.gb.market.api.dto.CartDto;
 import com.gb.market.api.dto.ProductDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 @RequiredArgsConstructor
 public class CartServiceIntegration {
-    private final RestTemplate restTemplate;
+//    private final RestTemplate restTemplate;
+//
+//    public CartDto getCart() {
+//        return restTemplate.getForObject("http://localhost:8190/market-carts/api/v1/products/cart" , CartDto.class);
+//    }
+//
+//    public void addToCart(ProductDto productDto) {
+//        restTemplate.postForObject("http://localhost:8190/market-carts/api/v1/products/cart", productDto, ProductDto.class);
+//    }
+//
+//    public void clearCart(){
+//        restTemplate.delete("http://localhost:8190/market-carts/api/v1/products/cart");
+//    }
+    private final WebClient cartServiceWebClient;
 
     public CartDto getCart() {
-        return restTemplate.getForObject("http://localhost:8190/market-carts/api/v1/products/cart" , CartDto.class);
+        return cartServiceWebClient.get()
+                .uri("/api/v1/products/cart")
+                .retrieve()
+                .bodyToMono(CartDto.class)
+                .block();
     }
 
     public void addToCart(ProductDto productDto) {
-        restTemplate.postForObject("http://localhost:8190/market-carts/api/v1/products/cart", productDto, ProductDto.class);
+        cartServiceWebClient.post()
+                .uri("/api/v1/products/cart")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(productDto))
+//                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+//                .body(Mono.just(productDto), ProductDto.class)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
     }
 
-    public void clearCart(){
-        restTemplate.delete("http://localhost:8190/market-carts/api/v1/products/cart");
+    public void clearCart() {
+        cartServiceWebClient.delete()
+                .uri("/api/v1/products/cart")
+                .retrieve()
+                .toBodilessEntity()
+                .block();
     }
+
 }

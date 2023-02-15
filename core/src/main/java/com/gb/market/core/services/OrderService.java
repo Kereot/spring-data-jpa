@@ -4,7 +4,6 @@ import com.gb.market.api.dto.CartDto;
 import com.gb.market.api.exceptions.ResourceNotFoundException;
 import com.gb.market.core.entities.Order;
 import com.gb.market.core.entities.OrderItem;
-import com.gb.market.core.entities.User;
 import com.gb.market.core.integrations.CartServiceIntegration;
 import com.gb.market.core.repositories.OrderRepository;
 import jakarta.transaction.Transactional;
@@ -22,10 +21,10 @@ public class OrderService {
     private final ProductService productsService;
 
     @Transactional
-    public void createOrder(User user) {
+    public void createOrder(String username) {
         CartDto currentCart = cartServiceIntegration.getCart();
         Order order = new Order();
-        order.setUser(user);
+        order.setUsername(username);
         order.setTotalPrice(currentCart.getTotalPrice());
         List<OrderItem> items = currentCart.getProducts().stream()
                 .map(o -> {
