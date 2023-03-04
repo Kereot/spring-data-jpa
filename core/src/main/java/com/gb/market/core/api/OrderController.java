@@ -35,13 +35,14 @@ public class OrderController {
     @DeleteMapping("/{id}")
     public void deleteOrder(@PathVariable Long id) {
         List<OrderItem> items = orderService.findOrderById(id).getItems();
+        String username = orderService.findOrderById(id).getUsername();
         for (OrderItem item : items) {
             ProductDto productDto = new ProductDto();
             productDto.setId(item.getProduct().getId());
             productDto.setName(item.getProduct().getName());
             productDto.setPrice(item.getPrice());
             for (int j = item.getQuantity(); j > 0; j--) {
-                cartServiceIntegration.addToCart(productDto);
+                cartServiceIntegration.addToCart(productDto, username);
             }
         }
         orderService.deleteOrder(id);

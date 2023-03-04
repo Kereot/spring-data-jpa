@@ -1,0 +1,19 @@
+<div>
+  <h3>My Orders</h3>
+  <table class="table table-hover">
+    <tr>
+      <td>ID</td>
+      <td>Total Price</td>
+      <td>Delete and Edit Order</td>
+    </tr>
+    <tbody>
+    <tr ng-repeat="o in myOrders">
+      <td>{{o.id}}</td>
+      <td>{{o.totalPrice}}</td>
+      <td>
+        <button class="btn btn-danger" ng-click="deleteOrder(o.id)">Delete and Edit</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

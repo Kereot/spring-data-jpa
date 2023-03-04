@@ -1,0 +1,73 @@
+<div>
+  <h3>Filter Products</h3>
+  <form novalidate ng-submit="loadProducts()">
+    <div class = "form-floating input-group-sm">
+      <input class="form-control" id="filterMinPrice" type="number" ng-model="filter.min_price">
+      <label for = "filterMinPrice">Min. Price</label>
+    </div>
+    <p></p>
+    <div class = "form-floating input-group-sm">
+      <input class="form-control" id="filterMaxPrice" type="number" ng-model="filter.max_price">
+      <label for = "filterMaxPrice">Max. Price</label>
+    </div>
+    <p></p>
+    <div class = "form-floating input-group-sm">
+      <input class="form-control" id="filterName" type="text" ng-model="filter.name">
+      <label for = "filterName">Product Name</label>
+    </div>
+    <p></p>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button class="btn btn-danger" ng-click="resetFilter()">Reset</button>
+  </form>
+
+  <h3>Products List</h3>
+  <table class="table table-hover" cellpadding="0" cellspacing="0">
+    <tr>
+      <td>ID</td>
+      <td>Name</td>
+      <td>Price</td>
+      <td>Delete</td>
+      <td>Add To Cart</td>
+      <td>New Price</td>
+      <td>Change Price</td>
+    </tr>
+    <tbody>
+    <tr ng-repeat="p in ProductsPage.content">
+      <td>{{p.id}}</td>
+      <td>{{p.name}}</td>
+      <td>{{p.price}}</td>
+      <td>
+        <button class="btn btn-danger" ng-click="deleteProduct(p.id)">Remove</button>
+      </td>
+      <td>
+        <button class="btn btn-danger" ng-click="addToCart(p.id, p.name, p.price)">Add To Cart</button>
+      </td>
+      <td>
+        <input type="number" name="cost" ng-model="price" />
+      </td>
+      <td>
+        <button class="btn btn-primary" ng-click="changePrice(p.id, p.name, price)">Confirm</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <ul>
+    <button ng-disabled="currentPage == 1" ng-click="changePage(currentPage-1)">Previous</button>
+    {{currentPage}}
+    <button ng-disabled="ProductsPage.content.length < 10" ng-click="changePage(currentPage+1)">Next</button>
+  </ul>
+  <br>
+  <h3>Add New Random Beer</h3>
+  <button class="btn btn-primary"
+          ng-click="saveRandom()">Do It!</button>
+  <br>
+  <br>
+  <h3>Add Product</h3>
+  <form novalidate ng-submit="addProduct()">
+    <input class="form-control" type="text" ng-model="newProduct.name">
+    <p></p>
+    <input class="form-control" type="number" ng-model="newProduct.price">
+    <p></p>
+    <button type="submit" class="btn btn-primary">Confirm</button>
+  </form>
+</div>

@@ -26,18 +26,20 @@ public class CartServiceIntegration {
 //    }
     private final WebClient cartServiceWebClient;
 
-    public CartDto getCart() {
+    public CartDto getCart(String username) {
         return cartServiceWebClient.get()
                 .uri("/api/v1/products/cart")
+                .header("username", username)
                 .retrieve()
                 .bodyToMono(CartDto.class)
                 .block();
     }
 
-    public void addToCart(ProductDto productDto) {
+    public void addToCart(ProductDto productDto, String username) {
         cartServiceWebClient.post()
                 .uri("/api/v1/products/cart")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("username", username)
                 .body(BodyInserters.fromValue(productDto))
 //                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 //                .body(Mono.just(productDto), ProductDto.class)
@@ -46,9 +48,10 @@ public class CartServiceIntegration {
                 .block();
     }
 
-    public void clearCart() {
+    public void clearCart(String username) {
         cartServiceWebClient.delete()
                 .uri("/api/v1/products/cart")
+                .header("username", username)
                 .retrieve()
                 .toBodilessEntity()
                 .block();
