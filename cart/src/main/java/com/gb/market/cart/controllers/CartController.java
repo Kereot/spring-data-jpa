@@ -25,32 +25,32 @@ public class CartController {
 //    }
 
     @GetMapping("/cart")
-    public CartDto loadCart() {
-        return cartConverter.entityToDto(cartService.getCurrentCart());
+    public CartDto loadCart(@RequestHeader (name = "username", required = false) String username) {
+        return cartConverter.entityToDto(cartService.getCurrentCart(username));
     }
 
     @PostMapping("/cart")
-    public void addToCart(@RequestBody ProductDto productDto){
-        cartService.addToCart(productDto);
+    public void addToCart(@RequestHeader (name = "username", required = false) String username, @RequestBody ProductDto productDto){
+        cartService.addToCart(productDto, username);
     }
 
     @PostMapping("/cart/{id}")
-    public void increaseQuantity(@PathVariable Long id) {
-        cartService.increaseQuantity(id);
+    public void increaseQuantity(@RequestHeader (name = "username", required = false) String username, @PathVariable Long id) {
+        cartService.increaseQuantity(id, username);
     }
 
     @DeleteMapping("/cart/{id}")
-    public void deleteProductFromCart(@PathVariable Long id){
-        cartService.removeItem(id);
+    public void deleteProductFromCart(@RequestHeader (name = "username", required = false) String username, @PathVariable Long id){
+        cartService.removeItem(id, username);
     }
 
     @DeleteMapping("/cart")
-    public void clearCart() {
-        cartService.removeAllItems();
+    public void clearCart(@RequestHeader (name = "username", required = false) String username) {
+        cartService.removeAllItems(username);
     }
 
     @GetMapping("/cart/total_price")
-    public Float showTotalPrice() {
-        return cartService.getCurrentCart().getTotalPrice();
+    public Float showTotalPrice(@RequestHeader (name = "username", required = false) String username) {
+        return cartService.getCurrentCart(username).getTotalPrice();
     }
 }
