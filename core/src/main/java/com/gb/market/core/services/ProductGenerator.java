@@ -9,6 +9,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Timer
 @Component
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class ProductGenerator {
     public static Product generate() {
         Product product = new Product();
         product.setName(faker.beer().name());
-        product.setPrice((float) faker.number().randomDouble(2, 5, 30));
+        product.setPrice(BigDecimal.valueOf(faker.number().randomDouble(2, 5, 30)));
 
         return product;
     }

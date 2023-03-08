@@ -28,7 +28,7 @@ public class CartServiceIntegration {
 
     public CartDto getCart(String username) {
         return cartServiceWebClient.get()
-                .uri("/api/v1/products/cart")
+                .uri("/api/v1/products/cart/0")
                 .header("username", username)
                 .retrieve()
                 .bodyToMono(CartDto.class)
@@ -37,7 +37,7 @@ public class CartServiceIntegration {
 
     public void addToCart(ProductDto productDto, String username) {
         cartServiceWebClient.post()
-                .uri("/api/v1/products/cart")
+                .uri("/api/v1/products/cart/0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("username", username)
                 .body(BodyInserters.fromValue(productDto))
@@ -50,7 +50,7 @@ public class CartServiceIntegration {
 
     public void clearCart(String username) {
         cartServiceWebClient.delete()
-                .uri("/api/v1/products/cart")
+                .uri("/api/v1/products/cart/0")
                 .header("username", username)
                 .retrieve()
                 .toBodilessEntity()

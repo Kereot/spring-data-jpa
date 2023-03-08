@@ -1,0 +1,17 @@
+<div>
+    <p></p>
+    <h3>Register New User</h3>
+    <p></p>
+    <form novalidate ng-submit="registerUser()">
+        <input class="form-control" id="userUsername" type="text" placeholder="Username" ng-model="regUser.username">
+        <p></p>
+        <input class="form-control" id="userEmail" type="email" placeholder="E-mail" ng-model="regUser.email">
+        <p></p>
+        <input class="form-control" id="userPassword" type="password" placeholder="Password" ng-model="regUser.password">
+        <p></p>
+        <input class="form-control" id="userConfirmPassword" type="password" placeholder="Confirm Password" ng-model="regUser.confirmPassword">
+        <p></p>
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+    <p></p>
+</div>

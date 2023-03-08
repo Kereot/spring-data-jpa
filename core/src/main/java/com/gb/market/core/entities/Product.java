@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -25,7 +26,7 @@ public class Product {
 
     @NonNull // for RequiredArgsConstructor w/o timestamps
     @Column(name = "price")
-    private Float price;
+    private BigDecimal price;
 
     @CreationTimestamp
     @Column(name = "created_at")

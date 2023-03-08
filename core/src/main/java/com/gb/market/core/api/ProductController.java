@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
@@ -30,8 +32,8 @@ public class ProductController {
     @GetMapping()
     public Page<ProductDto> find(
             @RequestParam(name = "page", defaultValue = "1") Integer page,
-            @RequestParam(name = "min_price", required = false) Float minPrice,
-            @RequestParam(name = "max_price", required = false) Float maxPrice,
+            @RequestParam(name = "min_price", required = false) BigDecimal minPrice,
+            @RequestParam(name = "max_price", required = false) BigDecimal maxPrice,
             @RequestParam(name = "name", required = false) String name
     ) {
         if (page < 1) {

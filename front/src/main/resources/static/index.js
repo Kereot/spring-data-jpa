@@ -22,6 +22,10 @@
                 templateUrl: 'orders/orders.html',
                 controller: 'ordersController'
             })
+            .when('/registration', {
+                templateUrl: 'registration/registration.html',
+                controller: 'registrationController'
+            })
             .otherwise({
                 redirectTo: '/'
             });
@@ -30,6 +34,12 @@
     function run($rootScope, $http, $localStorage) {
         if ($localStorage.springWebUser) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.springWebUser.token;
+        }
+        if (!$localStorage.springMarketGuestCartId) {
+            $http.get('http://localhost:8200/cart/api/v1/products/cart/generate_uuid')
+                .then(function successCallback(response) {
+                    $localStorage.springMarketGuestCartId = response.data.value;
+                });
         }
     }
 })();
@@ -43,6 +53,8 @@ angular.module('app').controller('restProductController', function ($scope, $roo
                 if (response.data.token) {
                     $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
                     $localStorage.springWebUser = {username: $scope.user.username, token: response.data.token};
+
+                    $scope.transferItemsInCart();
 
                     $scope.user.username = null;
                     $scope.user.password = null;
@@ -68,5 +80,12 @@ angular.module('app').controller('restProductController', function ($scope, $roo
     $rootScope.isUserLoggedIn = function () {
         return !!$localStorage.springWebUser;
     };
+
+    $scope.transferItemsInCart = function () {
+        $http.get(gatewayPath + 'cart/api/v1/products/cart/merge/' + $localStorage.springMarketGuestCartId)
+            .then(function () {
+
+            });
+    }
 
 });
