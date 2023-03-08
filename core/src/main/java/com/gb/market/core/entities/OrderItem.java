@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -31,10 +32,10 @@ public class OrderItem {
     private Integer quantity;
 
     @Column(name = "price_per_product")
-    private Float pricePerProduct;
+    private BigDecimal pricePerProduct;
 
     @Column(name = "price")
-    private Float price;
+    private BigDecimal price;
 
     @CreationTimestamp
     @Column(name = "created_at")

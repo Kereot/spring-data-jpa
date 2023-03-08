@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
@@ -36,7 +37,7 @@ public class ProductControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = "READ_AND_WRITE")
     public void getById() throws Exception {
-        Product product = new Product(1L, "One", 10f, null, null);
+        Product product = new Product(1L, "One", BigDecimal.valueOf(10), null, null);
         given(productService.findById(1L)).willReturn(Optional.of(product));
 
         mockMvc.perform(get("/api/v1/products/" + "1").contentType(MediaType.APPLICATION_JSON))

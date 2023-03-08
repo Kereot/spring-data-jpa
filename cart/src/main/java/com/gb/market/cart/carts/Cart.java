@@ -5,9 +5,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,15 +13,15 @@ import java.util.Objects;
 @Getter
 public class Cart {
     private final List<ProductInCartDto> itemsInCart;
-    private Float totalPrice;
+    private BigDecimal totalPrice;
 
     public Cart() {
         this.itemsInCart = new ArrayList<>();
     }
 
-    public List<ProductInCartDto> getItemsInCart() {
-        return Collections.unmodifiableList(itemsInCart);
-    }
+//    public List<ProductInCartDto> getItemsInCart() {
+//        return Collections.unmodifiableList(itemsInCart);
+//    }
 
     public void addToCart(ProductInCartDto productInCartDto) {
         boolean hasMatch = false;
@@ -66,13 +64,11 @@ public class Cart {
     }
 
     public void recalculate() {
-        float tempPrice = 0f;
+        totalPrice = BigDecimal.ZERO;
         for (ProductInCartDto productInCartDto : itemsInCart) {
             for (int j = 0; j < productInCartDto.getQuantity(); j++) {
-                tempPrice += productInCartDto.getPrice();
+                totalPrice = totalPrice.add(productInCartDto.getPrice());
             }
         }
-        totalPrice = BigDecimal.valueOf(tempPrice)
-                .setScale(2, RoundingMode.HALF_UP).floatValue();
     }
 }

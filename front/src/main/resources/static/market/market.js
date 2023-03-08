@@ -1,4 +1,4 @@
-angular.module('app').controller('marketController', function ($scope, $rootScope, $http) {
+angular.module('app').controller('marketController', function ($scope, $rootScope, $http, $localStorage) {
     const gatewayPath = 'http://localhost:8200/';
 
     $scope.currentPage = 1;
@@ -65,14 +65,12 @@ angular.module('app').controller('marketController', function ($scope, $rootScop
     }
 
     $scope.addToCart = function(id, name, price) {
-        $http.post(gatewayPath + 'cart/api/v1/products/cart', {
+        $http.post(gatewayPath + 'cart/api/v1/products/cart/' + $localStorage.springMarketGuestCartId, {
             id: id,
             name: name,
             price: price
         })
-            .then(function () {
-                // $scope.loadCart();
-            });
+            .then(function () {});
     }
 
     $scope.loadProducts();

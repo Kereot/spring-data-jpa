@@ -1,16 +1,8 @@
-angular.module('app').controller('cartController', function ($scope, $rootScope, $http, $location) {
+angular.module('app').controller('cartController', function ($scope, $rootScope, $http, $location, $localStorage) {
     const gatewayPath = 'http://localhost:8200/';
 
-    // $scope.loadCart = function () {
-    //     $http.get(gatewayPath + 'cart/products/cart')
-    //         .then(function (response) {
-    //             $scope.CartsPage = response.data;
-    //             $scope.showTotalPrice();
-    //         });
-    // }
-
     $scope.loadCart = function () {
-        $http.get(gatewayPath + 'cart/api/v1/products/cart')
+        $http.get(gatewayPath + 'cart/api/v1/products/cart/' + $localStorage.springMarketGuestCartId)
             .then(function (response) {
                 $scope.cart = response.data;
                 $scope.showTotalPrice();
@@ -18,7 +10,7 @@ angular.module('app').controller('cartController', function ($scope, $rootScope,
     }
 
     $scope.increaseQuantity = function (id) {
-        $http.post(gatewayPath + 'cart/api/v1/products/cart/' + id, {
+        $http.post(gatewayPath + 'cart/api/v1/products/cart/' + $localStorage.springMarketGuestCartId + '/' + id, {
             id: id
         })
             .then(function () {
@@ -27,14 +19,14 @@ angular.module('app').controller('cartController', function ($scope, $rootScope,
     }
 
     $scope.deleteProductFromCart = function (id) {
-        $http.delete(gatewayPath + 'cart/api/v1/products/cart/'+ id)
+        $http.delete(gatewayPath + 'cart/api/v1/products/cart/' + $localStorage.springMarketGuestCartId + '/' + id)
             .then(function () {
                 $scope.loadCart();
             });
     }
 
     $scope.clearCart = function () {
-        $http.delete(gatewayPath + 'cart/api/v1/products/cart')
+        $http.delete(gatewayPath + 'cart/api/v1/products/cart/' + $localStorage.springMarketGuestCartId)
             .then(function () {
                 $scope.totalPrice = 0;
                 $scope.loadCart();
@@ -44,7 +36,7 @@ angular.module('app').controller('cartController', function ($scope, $rootScope,
     $scope.totalPrice = 0;
 
     $scope.showTotalPrice = function () {
-        $http.get(gatewayPath + 'cart/api/v1/products/cart/total_price')
+        $http.get(gatewayPath + 'cart/api/v1/products/cart/'  + $localStorage.springMarketGuestCartId + '/total_price')
             .then(function (response) {
                 $scope.totalPrice = response.data;
             });

@@ -36,13 +36,16 @@
                        type="password"
                        aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px;">
                 <button id="navLoginSubmit" class="btn btn-outline-warning btn-sm"
-                        style="margin-left: 10px;" type="submit">Войти
+                        style="margin-left: 10px;" type="submit">Sign In
                 </button>
               </div>
             </form>
           </li>
+          <li class="nav-item" ng-show="!isUserLoggedIn()">
+            <a class="nav-link" href="#!/registration">Sign Up</a>
+          </li>
           <li class="nav-item" ng-show="isUserLoggedIn()" style="padding: 4px;">
-            <button class="btn btn-outline-secondary btn-sm" ng-click="tryToLogout()">Выйти</button>
+            <button class="btn btn-outline-secondary btn-sm" ng-click="tryToLogout()">Logout</button>
           </li>
         </ul>
       </div>
@@ -55,6 +58,7 @@
   <script src="market/market.js"></script>
   <script src="cart/cart.js"></script>
   <script src="orders/orders.js"></script>
+  <script src="registration/registration.js"></script>
 </div>
 
 </body>

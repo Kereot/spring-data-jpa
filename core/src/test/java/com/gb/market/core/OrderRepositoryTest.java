@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +26,13 @@ public class OrderRepositoryTest {
     public void orderRepositoryTest() {
         Product product = new Product();
         product.setName("TestProduct");
-        product.setPrice(100f);
+        product.setPrice(BigDecimal.valueOf(100));
 
         entityManager.persist(product);
 
         Order order = new Order();
         order.setUsername("TestUser");
-        order.setTotalPrice(100f);
+        order.setTotalPrice(BigDecimal.valueOf(100));
 
         entityManager.persist(order);
 
@@ -39,7 +40,7 @@ public class OrderRepositoryTest {
         orderItem.setOrder(order);
         orderItem.setProduct(product);
         orderItem.setQuantity(1);
-        orderItem.setPrice(100f);
+        orderItem.setPrice(BigDecimal.valueOf(100));
 
         entityManager.persist(orderItem);
         entityManager.flush();
@@ -51,7 +52,7 @@ public class OrderRepositoryTest {
         List<Order> testList = orderRepository.findAll();
 
         Assertions.assertEquals(1, testList.size());
-        Assertions.assertEquals(100f, testList.get(0).getTotalPrice());
+        Assertions.assertEquals(BigDecimal.valueOf(100), testList.get(0).getTotalPrice());
         Assertions.assertEquals("TestProduct", testList.get(0)
                 .getItems().get(0)
                 .getProduct()

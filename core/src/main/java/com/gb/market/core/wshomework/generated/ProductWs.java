@@ -11,6 +11,7 @@ package com.gb.market.core.wshomework.generated;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import javax.xml.bind.annotation.*;
+import java.math.BigDecimal;
 
 
 /**
@@ -25,7 +26,7 @@ import javax.xml.bind.annotation.*;
  *       &lt;sequence&gt;
  *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="price" type="{http://www.w3.org/2001/XMLSchema}float"/&gt;
+ *         &lt;element name="price" type="{http://www.w3.org/2001/XMLSchema}decimal"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -47,7 +48,7 @@ public class ProductWs {
     protected long id;
     @XmlElement(required = true)
     protected String name;
-    protected float price;
+    protected BigDecimal price;
 
     /**
      * Gets the value of the id property.
@@ -93,7 +94,7 @@ public class ProductWs {
      * Gets the value of the price property.
      * 
      */
-    public float getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
@@ -101,7 +102,7 @@ public class ProductWs {
      * Sets the value of the price property.
      * 
      */
-    public void setPrice(float value) {
+    public void setPrice(BigDecimal value) {
         this.price = value;
     }
 

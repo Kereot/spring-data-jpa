@@ -2,3 +2,5 @@ server:
   port: 8190
   servlet:
     context-path: /market-carts
+cart-service:
+  cart-prefix: springMarket_cart_

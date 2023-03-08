@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +14,7 @@ public class ProductInCartDto {
 
     private String name;
 
-    private Float price;
+    private BigDecimal price;
 
     private Integer quantity;
 }
