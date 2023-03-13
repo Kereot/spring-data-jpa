@@ -10,17 +10,22 @@ integrations:
     write-timeout: 5000
 spring:
   datasource:
-    url: jdbc:h2:mem:productsdatabase;MODE=PostgreSQL
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-  h2:
-    console:
-      enabled: true
+#    url: jdbc:h2:mem:productsdatabase;MODE=PostgreSQL
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5433/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+#  h2:
+#    console:
+#      enabled: true
   jpa:
     hibernate:
-      dialect: org.hibernate.dialect.H2Dialect
+#      dialect: org.hibernate.dialect.H2Dialect
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   jackson:
     serialization:
       indent_output: true
