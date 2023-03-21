@@ -6,7 +6,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CartItemConverter {
-    public ProductInCartDto productDtoToProductInCartDto(ProductDto productDto, int quantity) {
-        return new ProductInCartDto(productDto.getId(), productDto.getName(), productDto.getPrice(), quantity);
+    public ProductInCartDto productDtoToProductInCartDto(ProductDto productDto, int ProductQuantity) {
+        return ProductInCartDto.builder()
+                .id(productDto.getId())
+                .name(productDto.getName())
+                .price(productDto.getPrice())
+                .quantity(ProductQuantity)
+                .build();
     }
 }
