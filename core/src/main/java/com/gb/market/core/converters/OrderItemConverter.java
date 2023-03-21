@@ -7,10 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderItemConverter {
     public ProductInCartDto entityToDto(OrderItem orderItem) {
-        return new ProductInCartDto(
-                orderItem.getProduct().getId(),
-                orderItem.getProduct().getName(),
-                orderItem.getPrice(),
-                orderItem.getQuantity());
+        return ProductInCartDto.builder()
+                .id(orderItem.getProduct().getId())
+                .name(orderItem.getProduct().getName())
+                .price(orderItem.getPrice())
+                .quantity(orderItem.getQuantity())
+                .build();
     }
 }
