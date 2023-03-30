@@ -19,6 +19,7 @@ public class ProductGenerator {
 
     private final ProductRepository productRepository;
 
+    // A listener from long time ago
     @EventListener(ApplicationReadyEvent.class)
     public void generateProductsOnStartup() {
         for (int i = 0; i < 20; i++) {

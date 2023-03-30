@@ -2,10 +2,13 @@ package com.gb.market.core.services;
 
 import com.gb.market.api.dto.ProductDto;
 import com.gb.market.api.exceptions.ResourceNotFoundException;
+import com.gb.market.core.converters.ProductConverter;
 import com.gb.market.core.entities.Product;
+import com.gb.market.core.events.Event;
 import com.gb.market.core.repositories.ProductRepository;
 import com.gb.market.core.repositories.specifications.ProductSpecifications;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,6 +23,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final ProductConverter productConverter;
 
     public Page<Product> find(BigDecimal minPrice, BigDecimal maxPrice, String name, Integer page) {
         Specification<Product> spec = Specification.where(null);
@@ -44,6 +49,7 @@ public class ProductService {
     }
 
     public Product save(Product product) {
+        applicationEventPublisher.publishEvent(new Event(this, productConverter.entityToDto(product)));
         return productRepository.save(product);
     }
 
