@@ -5,6 +5,7 @@ import com.gb.market.api.exceptions.ResourceNotFoundException;
 import com.gb.market.core.converters.ProductConverter;
 import com.gb.market.core.entities.Product;
 import com.gb.market.core.events.Event;
+import com.gb.market.core.identity.ProductIdentityMap;
 import com.gb.market.core.repositories.ProductRepository;
 import com.gb.market.core.repositories.specifications.ProductSpecifications;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final ProductConverter productConverter;
+    private final ProductIdentityMap<Long, Product> productIdentityMap;
 
     public Page<Product> find(BigDecimal minPrice, BigDecimal maxPrice, String name, Integer page) {
         Specification<Product> spec = Specification.where(null);
@@ -45,7 +47,12 @@ public class ProductService {
     }
 
     public Optional<Product> findById(Long id) {
-        return productRepository.findById(id);
+        if (!productIdentityMap.containsKey(id)) {
+            Optional<Product> product = productRepository.findById(id);
+            product.ifPresent(mapProduct -> productIdentityMap.put(mapProduct.getId(), mapProduct));
+            return product;
+        }
+        return Optional.ofNullable(productIdentityMap.get(id));
     }
 
     public Product save(Product product) {
@@ -62,6 +69,9 @@ public class ProductService {
         Product product = productRepository.findById(productDto.getId()).orElseThrow(() -> new ResourceNotFoundException("Can't update the product (not found in the DB) id: " + productDto.getId()));
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
+        if (productIdentityMap.containsKey(product.getId())) {
+            productIdentityMap.put(product.getId(), product);
+        }
         return product;
     }
 }
